@@ -1,0 +1,60 @@
+{% comment %}
+  /**
+   * @param {object} section - section object
+   * @param {boolean} divider - show divider
+   * @param {string} title - title
+   * @param {string} heading_position - heading position
+   * @param {string} heading_size - heading size
+   * @param {number} section_blocks_size - number of blocks in section
+   * @param {boolean} grid_background_color - grid background color enabled or not
+   */
+{% endcomment %}
+
+<!-- Custom styles -->
+{% style %}
+  #shopify-section-{{ section.id }}.index-section {
+    background: {{ section.settings.background }};
+  }
+{% endstyle %}
+
+{%- if divider -%}<div class="section--divider">{%- endif -%}
+
+<div class="page-width">
+  {%- if title != blank -%}
+    <div class="section-header text-{{ heading_position }}">
+      <h2 class="section-header__title {% if section.settings.divider_title %}divider-title{% endif %} {{ heading_size }}"><span>{{ title | escape }}</span></h2>
+    </div>
+  {%- endif -%}
+
+  {%- if section_blocks_size > 0 -%}
+    <div class="logo-bar logo-bar--{{ section.id }} logo-bar--grid-background-color--{{ grid_background_color }}">
+      <div class="new-grid product-grid" data-view="6-2">
+        {%- for block in section.blocks -%}
+          <div class="grid-item grid-product" {{ block.shopify_attributes }}>
+            <div class="logo-bar__item{% if block.settings.image == blank %} logo-bar__item-svg{% endif %}">
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="logo-bar__link" aria-label="{{ block.settings.image.alt }}">
+              {%- endif -%}
+              {%- if block.settings.image != blank -%}
+                {%- render 'image-element',
+                  img: block.settings.image,
+                  sizeVariable: '6',
+                  fallback: '50vw',
+                  widths: '360, 540, 720, 1020',
+                  classes: 'logo-bar__image',
+                -%}
+              {%- else -%}
+                {{ 'logo' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--no-padding' }}
+              {%- endif -%}
+              {%- if block.settings.link != blank -%}
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- if divider -%}</div>{%- endif -%}

@@ -1,0 +1,35 @@
+{% comment %} New snippet - 15 May '24' {% endcomment %}
+<div class="site-header__dropdown-menu">
+    <button class="btn btn--primary" id="dropdownTrigger{{ breakpoint }}"><span>{% render 'icon', name: 'categories' %}</span><span class="text">All Categories</span><span class="chevron">{% render 'icon', name: 'chevron-down' %}</span></button>
+    <div class="site-header__dropdown-menu--inner">
+        <ul>
+            {% for link in linklists[dropdown_menu].links %}
+                <li><div class="site-header__dropdown-menu--link-wrapper"><a class="site-header__dropdown-menu--link" href="{{ link.url }}">{{ link.title }}</a><span class="arrow"></span></div>
+                    {% if link.links.size > 0 %}
+                        <div class="submenu">
+                            <h2>{{ link.title }}</h2>
+                            <ul>
+                            {% for sublink in link.links %}
+                                {% capture image %}collection-{% cycle '1', '2', '3', '4', '5', '6' %}{% endcapture %}
+                                <li>
+                                    <a href="{{ sublink.url }}">
+                                        {% if sublink.type == 'collection_link' %}
+                                            {% if sublink.object.image != blank %}
+                                                {{ sublink.object.image | img_url: '200x' | img_tag }}
+                                            {% else %}
+                                                {{ image | placeholder_svg_tag }}
+                                            {% endif %}
+                                        {% endif %}
+                                        <span>{{ sublink.title }}</span>
+                                </a>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                            <a href="/">View all products</a>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

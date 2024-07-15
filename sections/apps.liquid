@@ -1,0 +1,36 @@
+{%- render 'section-apps',
+    section: section,
+    space_around: section.settings.space_around,
+    full_width: section.settings.full_width,
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.apps",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:labels.full_page_width",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "space_around",
+      "label": "t:actions.add_spacing_above",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:labels.apps"
+    }
+  ]
+}
+{% endschema %}

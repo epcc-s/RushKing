@@ -1,0 +1,41 @@
+{% comment %}
+  /**
+   * @param {object} section - section object
+   * @param {string} color_scheme - color scheme
+   * @param {string} text - text to scroll
+   * @param {string} direction - direction to scroll
+   * @param {number} speed - speed to scroll
+   * @param {string} text_size - size of text
+   * @param {string} text_spacing - spacing between text
+   * @param {string} link - link to go to
+   * @param {string} color_button - color of button
+   * @param {string} color_button_text - color of button text
+   */
+{% endcomment %}
+
+{% comment %} Removed color schema - 15 May '24 {% endcomment %}
+<div>
+  {% style %}
+    .scrolling-text--{{ section.id }} {
+      --move-speed: {{ speed }}s;
+      /* Added input fields for text and background color - 15 May '24 */
+      background: {{ background }};
+      color: {{ text_color }};
+    }
+
+    .scrolling-text--{{ section.id }} .scrolling-text__inner-text  {
+      font-size: {{ text_size }}px;
+    }
+  {% endstyle %}
+
+  <div class="scrolling-text scrolling-text--{{ section.id }}">
+    <div class="scrolling-text__inner scrolling-text__inner--{{ direction }}" aria-hidden="true" tabindex="0" style="gap: {% if text_spacing %}40px{% else %}10px{% endif %};">
+      {% for i in (1..35) %}
+        {% comment %} Changed input type to richtext and wrapper tag from span to div - 15 May '24 {% endcomment %}
+        <div class="scrolling-text__inner-text">{{ text }}</div>
+        {% if section.settings.icon %}{{ icon | img_url: '50x' | img_tag }}{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+</div>

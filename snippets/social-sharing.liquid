@@ -1,0 +1,37 @@
+{% comment %}
+  /**
+   * @param {boolean} share_facebook - Whether to show the Facebook share button
+   * @param {boolean} share_twitter - Whether to show the Twitter share button
+   * @param {boolean} share_pinterest - Whether to show the Pinterest share button
+   * @param {string} share_title - The title of the page to share
+   * @param {string} share_permalink - The permalink of the page to share
+   * @param {string} share_image - The image of the page to share
+   */
+{% endcomment %}
+
+<div class="social-sharing">
+  {%- if share_facebook -%}
+    <a target="_blank" rel="noopener" href="//www.facebook.com/sharer.php?u={{ shop.url | append: share_permalink }}" class="social-sharing__link" title="{{ 'actions.share_on_facebook' | t }}">
+      {% render 'icon', name: 'facebook' %}
+      <span class="social-sharing__title" aria-hidden="true">{{ 'actions.share' | t }}</span>
+      <span class="visually-hidden">{{ 'actions.share_on_facebook' | t }}</span>
+    </a>
+  {%- endif -%}
+
+  {%- if share_twitter -%}
+    <a target="_blank" rel="noopener" href="//twitter.com/intent?tweet={{ share_title | url_param_escape }}&amp;url={{ shop.url | append: share_permalink }}" class="social-sharing__link" title="{{ 'actions.share_on_x' | t }}">
+      {% render 'icon', name: 'twitter' %}
+      <span class="social-sharing__title" aria-hidden="true">{{ 'actions.share' | t }}</span>
+      <span class="visually-hidden">{{ 'actions.share_on_x' | t }}</span>
+    </a>
+  {%- endif -%}
+
+  {%- if share_pinterest -%}
+    <a target="_blank" rel="noopener" href="//pinterest.com/pin/create/button/?url={{ shop.url | append: share_permalink }}&amp;media={{ share_image | image_url: width: 1024, height: 1024 }}&amp;description={{ share_title | url_param_escape }}" class="social-sharing__link" title="{{ 'actions.pin_on_pinterest' | t }}">
+      {% render 'icon', name: 'pinterest' %}
+      <span class="social-sharing__title" aria-hidden="true">{{ 'actions.pin_it' | t }}</span>
+      <span class="visually-hidden">{{ 'actions.pin_on_pinterest' | t }}</span>
+    </a>
+  {%- endif -%}
+</div>
+

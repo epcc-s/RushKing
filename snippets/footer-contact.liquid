@@ -1,0 +1,71 @@
+{% comment %}
+  /**
+   * param {object} block - block object
+   * @param {object} pages - pages object
+   * @param {string} social_instagram_link - instagram link
+   * @param {string} social_facebook_link - facebook link
+   * @param {string} social_twitter_link - twitter link
+   * @param {string} social_youtube_link - youtube link
+   * @param {string} social_pinterest_link - pinterest link
+   * @param {string} social_linkedin_link - linkedin link
+   * @param {string} social_snapchat_link - snapchat link
+   * @param {string} social_vimeo_link - vimeo link
+   * @param {string} social_tiktok_link - tiktok link
+   * @param {string} social_tumblr_link - tumblr link
+   * @param {string} blocks_heading_size - heading size for title in blocks
+   */
+{% endcomment %}
+
+<div class="footer__mobile-section">
+  <div class="footer__blocks--mobile">
+    <div class="footer__block--mobile">
+      <h2 class="footer__title {% if blocks_heading_size %}{{ blocks_heading_size }}{% endif %}">
+        {{ 'actions.get_in_touch' | t }}
+      </h2>
+      <ul class="footer__menu footer__menu--underline">
+        {%- if block.settings.phone != blank -%}
+          <li><a href="tel:{{ block.settings.phone }}">
+            <span class="icon-and-text">
+              {% render 'icon', name: 'phone' %}
+              <span>{{ block.settings.phone }}</span>
+            </span>
+          </a></li>
+        {%- endif -%}
+        {% comment %} Adding email and address fields - 21 May '24 {% endcomment %}
+        {%- if block.settings.email != blank -%}
+          <li><a href="mailto:{{ block.settings.email }}">
+            <span class="icon-and-text">
+              {% render 'icon', name: 'email' %}
+              <span>{{ block.settings.email }}</span>
+            </span>
+          </a></li>
+        {%- endif -%}
+        {%- if block.settings.address != blank -%}
+          <li>
+            <span class="icon-and-text">
+              {% render 'icon', name: 'local' %}
+              <span>{{ block.settings.address }}</span>
+            </span>
+          </li>
+        {%- endif -%}
+        {%- if block.settings.contact != blank -%}
+          <li><a href="{{ pages[block.settings.contact].url }}">
+            <span class="icon-and-text">
+              {% render 'icon', name: 'email' %}
+              <span>{{ 'actions.email_us' | t }}</span>
+            </span>
+          </a></li>
+        {%- endif -%}
+        {%- if block.settings.chat != blank -%}
+          <li><a href="{{ pages[block.settings.chat].url }}">
+            <span class="icon-and-text">
+              {% render 'icon', name: 'chat' %}
+              <span>{{ 'actions.live_chat' | t }}</span>
+            </span>
+          </a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+    {% comment %} Removed social icons and added them to a separate snippet/block - 21 May '24 {% endcomment %}
+  </div>
+</div>

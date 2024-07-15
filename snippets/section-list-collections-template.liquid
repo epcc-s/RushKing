@@ -1,0 +1,81 @@
+{% comment %}
+  /**
+    * @param {object} section - section object
+    * @param {object} collections - collections object
+    * @param {boolean} title_enable - enable title
+    * @param {string} display_type - display type
+    * @param {number} section_blocks_size - section blocks size
+    * @param {string} sort - sort by
+    * @param {string} collection_grid_image - collection grid image
+    * @param {string} collection_grid_shape - collection grid shape
+    * @param {string} collection_grid_image_fill - collection grid image fill
+    * @param {string} collection_grid_color - collection grid color
+  */
+{% endcomment %}
+
+{%- paginate collections by 20 -%}
+
+  <div class="page-width page-content">
+
+    {%- if title_enable -%}
+      <header class="section-header">
+        <h1 class="section-header__title">{{ 'labels.catalog' | t }}</h1>
+      </header>
+    {%- endif -%}
+
+    {%- liquid
+      capture gridView
+        if display_type == 'all'
+          render 'products-per-row', products_per_row: collections.size
+          assign sizeVariable = collections.size | at_most: 5
+        else
+          render 'products-per-row', products_per_row: section_blocks_size
+          assign sizeVariable = section_blocks_size | at_most: 5
+        endif
+      endcapture
+    -%}
+
+    <div class="new-grid" data-view="{{ gridView }}">
+      {%- if display_type == 'all' -%}
+        {%- liquid
+          case sort
+            when 'products_high'
+              assign collections = collections | sort: 'all_products_count' | reverse
+            when 'products_low'
+              assign collections = collections | sort: 'all_products_count'
+            when 'date'
+              assign collections = collections | sort: 'published_at'
+            when 'date_reversed'
+              assign collections = collections | sort: 'published_at' | reverse
+            when 'alphabetical_reversed'
+              assign collections = collections | sort: 'title' | reverse
+            else
+              assign collections = collections
+          endcase
+
+          for collection in collections
+            render 'collection-grid-item', collection: collection, sizeVariable: sizeVariable, fallback: 'variable', collection_grid_image: collection_grid_image, collection_grid_shape: collection_grid_shape, collection_grid_image_fill: collection_grid_image_fill, collection_grid_color: collection_grid_color
+          endfor
+        -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- assign collection = collections[block.settings.collection] -%}
+          {%- render 'collection-grid-item',
+            collection: collection,
+            block: block,
+            sizeVariable: sizeVariable,
+            fallback: 'variable',
+            collection_grid_shape: collection_grid_shape,
+            collection_grid_image_fill: collection_grid_image_fill,
+            collection_grid_color: collection_grid_color
+          -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if paginate.pages > 1 and display_type == 'all' -%}
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endif -%}
+  </div>
+
+{%- endpaginate -%}

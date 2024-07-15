@@ -1,0 +1,259 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.gstatic.com">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+  {%- endif -%}
+
+  {%- render 'seo-title' -%}
+
+  {%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {%- render 'social-meta-tags' -%}
+
+  {%- render 'font-face' -%}
+  {{ 'components.css' | asset_url | stylesheet_tag: preload: true }}
+  {%- render 'css-variables' -%}
+  {{ 'overrides.css' | asset_url | stylesheet_tag }}
+
+  {% comment %} Custom CSS file - 15 May '24 {% endcomment %}
+  {{ 'custom.css' | asset_url | stylesheet_tag }}
+
+  {%- style -%}
+
+  :root {
+    --productGridPadding: 12px;
+  }
+
+  {%- endstyle -%}
+
+
+  {%- liquid
+    assign enableSuperScript = false
+    unless shop.money_format contains 'money' or shop.money_format contains '.'
+      if settings.superscript_decimals
+        if shop.money_format contains '{{amount}}' or shop.money_format contains '{{ amount }}'
+          assign enableSuperScript = true
+        elsif shop.money_format contains '{{amount_with_comma_separator}}' or shop.money_format contains '{{ amount_with_comma_separator }}'
+          assign enableSuperScript = true
+        endif
+      endif
+    endunless
+  -%}
+
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+    window.theme = window.theme || {};
+    theme.routes = {
+      home: "{{ routes.root_url }}",
+      collections: "{{ routes.collections_url }}",
+      cart: "{{ routes.cart_url | append: '.js' }}",
+      cartPage: "{{ routes.cart_url }}",
+      cartAdd: "{{ routes.cart_add_url | append: '.js' }}",
+      cartChange: "{{ routes.cart_change_url | append: '.js' }}",
+      search: "{{ routes.search_url }}",
+      predictiveSearch: "{{ routes.predictive_search_url }}"
+    };
+
+    theme.strings = {
+      soldOut: {{ 'info.sold_out' | t | json }},
+      unavailable: {{ 'info.unavailable' | t | json }},
+      inStockLabel: {{ 'info.in_stock' | t | json }},
+      oneStockLabel: {{ 'info.low_stock_count.one' | t: count: '[count]' | json }},
+      otherStockLabel: {{ 'info.low_stock_count.other' | t: count: '[count]' | json }},
+      willNotShipUntil: {{ 'info.ready_to_ship_on' | t: date: '[date]' | json }},
+      willBeInStockAfter: {{ 'info.back_in_stock_on' | t: date: '[date]' | json }},
+      waitingForStock: {{ 'info.backordered' | t | json }},
+      savePrice: {{ 'info.save_amount' | t: saved_amount: '[saved_amount]' | json }},
+      cartEmpty: {{ 'info.cart_empty' | t | json }},
+      cartTermsConfirmation: {{ 'info.you_must_agree' | t | json }},
+      searchCollections: {{ 'labels.collections' | t | json }},
+      searchPages: {{ 'labels.pages' | t | json }},
+      searchArticles: {{ 'labels.articles' | t | json }},
+      maxQuantity: {{ 'info.cart_max_quantity' | t: quantity: '[quantity]', title: '[title]' | json }}
+    };
+    theme.settings = {
+      cartType: {{ settings.cart_type | json }},
+      isCustomerTemplate: {% if request.page_type contains 'customers/' %}true{% else %}false{% endif %},
+      moneyFormat: {{ shop.money_format | json }},
+      saveType: {{ settings.product_save_type | json }},
+      productImageSize: {{ settings.product_grid_image_size | json }},
+      productImageCover: {{ settings.product_grid_image_fill }},
+      predictiveSearch: {{ settings.predictive_search_enabled }},
+      predictiveSearchType: {{ settings.search_type | json }},
+      superScriptSetting: {{ settings.superscript_decimals }},
+      superScriptPrice: {{ enableSuperScript }},
+      quickView: {{ settings.quick_shop_enable }},
+      quickAdd: {{ settings.quick_add_enable }},
+      themeName: 'Expanse',
+      themeVersion: "5.1.0"
+    };
+  </script>
+
+  {%- render 'import-map' -%}
+  {%- render 'es-module-shims' -%}
+  {%- render 'is-land' -%}
+  {%- render 'preload-js' -%}
+
+  {{ content_for_header }}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+  {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {% if request.design_mode %}
+    <script src="https://api.archetypethemes.co/design-mode.js" defer="defer"></script>
+  {% endif %}
+{% include 'hulk_po_vd' %}</head>
+
+<body class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %}" data-button_style="{{ settings.button_style }}" data-edges="{{ settings.roundness }}" data-type_header_capitalize="{{ settings.type_header_capitalize }}" data-swatch_style="{{ settings.swatch_style }}" data-grid-style="{{ settings.product_grid_style }}">
+
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'actions.skip_to_content' | t }}</a>
+
+  <div id="PageContainer" class="page-container">
+    <div class="transition-body">
+      {%- sections 'header-group' -%}
+      {%- sections 'popup-group' -%}
+
+      <main class="main-content" id="MainContent">
+        {{ content_for_layout }}
+      </main>
+
+      {%- sections 'footer-group' -%}
+    </div>
+  </div>
+
+  {%- liquid
+    render 'video-modal'
+    render 'photoswipe-template'
+    render 'tool-tip'
+  -%}
+
+  {% if template.name == 'product' %}
+  <script>
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     setTimeout(() => {
+    //       document.querySelector('.hulkapps_option_child.hulkapps_option_889746_visible.hulkapps_dd.hulk_po_dropdown').addEventListener('change', function() {
+    //       if(this.value) {
+    //         document.querySelector('input.hulk_po_checkbox.hulkapps_option_child.hulkapps_option_889748_visible.hulkapps_product_option_889748_visible.price-change').checked = true;
+    //       } else {
+    //         document.querySelector('input.hulk_po_checkbox.hulkapps_option_child.hulkapps_option_889748_visible.hulkapps_product_option_889748_visible.price-change').checked = false;
+    //       }
+    //     })
+    //   }, 2000);
+    // });
+
+      const qtyVariant = document.querySelector('.variant-input-wrap[data-handle="quantity"] select');
+      const atc = document.querySelector('.btn.add-to-cart');
+      const options = [...qtyVariant.querySelectorAll('.variant-input')];
+      const optionValues = options.map(option => Number(option.text));
+      const stepQtyError = document.querySelector('.qty-message');
+      const newQtyMsg = document.getElementById('stepQuantity');
+    
+      // If the product should have quantity steps, we set it here based on a metafield
+      let step;
+      {% if product.metafields.custom.quantity_step != blank %}
+        step = Number({{ product.metafields.custom.quantity_step }});
+      {% else %}
+        step = null;
+      {% endif %} 
+
+      // Function to select a variant based on the quantity bracket
+      function setQtyVar(qty) {
+        if (qty < optionValues[0]) {
+          qtyVariant.value = optionValues[0];
+        } else if (qty >= optionValues[optionValues.length - 1]) {
+          qtyVariant.value = optionValues[optionValues.length - 1];
+        } else {
+          let val = optionValues.filter((option, i) => qty >= option && qty < optionValues[(i + 1)]);
+          qtyVariant.value = val;
+        }
+      }
+      
+      document.querySelector('.js-qty__wrapper--custom input').addEventListener('keyup', function(e) {
+          let qty = Number(e.target.value);
+
+          // We check if the input value is not a number or if it's lower than minimum order amount, show an error, and disable the ATC button
+          if (isNaN(qty) || qty < optionValues[0]) {
+            e.target.classList.add('error');
+            document.querySelector('.minimum').classList.add('error');
+            atc.disabled = true;
+            
+            // When input gets unfocused we set the quantity to a default minimum
+            e.target.addEventListener('blur', function() {
+              e.target.value = optionValues[0];
+              e.target.dispatchEvent(new Event('change'));
+              atc.disabled = false;
+            });
+          } 
+
+          // If the input value is a number and above minimum
+          if (!isNaN(qty) && qty >= optionValues[0]) {
+
+            // If the product has quantity steps, we round up the quantity to be divisible by step
+            if (step != null) { 
+              if (qty % step != 0) {
+                qty = Math.round(qty / step) * step;
+                stepQtyError.classList.remove('hidden');
+                newQtyMsg.innerHTML = qty; 
+                e.target.value = qty;
+                e.target.dispatchEvent(new Event('change'));
+              } else {
+                stepQtyError.classList.add('hidden');
+              }
+            }
+
+            // We change the variant and remove the error
+            setQtyVar(qty);
+            qtyVariant.dispatchEvent(new Event('change'));
+            e.target.addEventListener('blur', function() {
+              e.target.value = qty;
+            });
+            e.target.classList.remove('error');
+            document.querySelector('.minimum').classList.remove('error');
+          }
+      });
+
+      // On page load, if a quantity variant was selected, we automatically set the input field to minimum quantity for that price bracket
+      document.addEventListener("DOMContentLoaded", function() {
+        let qty = Number(qtyVariant.value);
+        document.querySelector('.js-qty__wrapper--custom input').value = qty;
+        document.querySelector('.js-qty__wrapper--custom input').dispatchEvent(new Event('change'));
+      });
+    </script>
+    {% endif %}
+
+    <!-- <script>
+      const total_products = {{- shop.products_count | default : false -}};
+      if(total_products){
+        let storeProducts = [];
+        let fetchCalls = [];
+        let ceailedCount = Math.ceil(total_products/250); 
+        for (let i = 1 ; i <= ceailedCount; i++ ){
+          fetchCalls.push(fetch('/products.json/?limit=250&page='+i))
+        }
+        Promise.all(fetchCalls)
+        .then(m => m.forEach(s => {
+          let k = s.json();
+          k.then( s => { storeProducts.push(s.products) })
+        }
+        )).then( j => console.log('process Completed',storeProducts ));
+      }
+    </script> -->
+</body>
+</html>

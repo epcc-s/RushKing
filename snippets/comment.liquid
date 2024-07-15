@@ -1,0 +1,13 @@
+<div class="grid clearfix">
+  <div class="grid__item medium-up--one-quarter">
+    <span class="h5 comment-author">{{ comment.author }}</span>
+    <span class="comment-date">
+      {{ comment.created_at | date: format: 'date_at_time' }}
+    </span>
+  </div>
+  <div class="grid__item medium-up--three-quarters">
+    <div class="rte clearfix">
+      {{ comment.content }}
+    </div>
+  </div>
+</div>

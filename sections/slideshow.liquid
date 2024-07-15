@@ -1,0 +1,256 @@
+{% render 'section-slideshow',
+  section: section,
+  full_width: section.settings.full_width,
+  autoplay: section.settings.autoplay,
+  autoplay_speed: section.settings.autoplay_speed,
+  style: section.settings.style,
+  desktop_size: section.settings.desktop_size,
+  mobile_size: section.settings.mobile_size
+%}
+
+{% schema %}
+{
+"name": "t:labels.hero_optional_slides",
+"class": "index-section--hero",
+"settings": [
+  {
+    "type": "checkbox",
+    "id": "full_width",
+    "label": "t:labels.full_page_width",
+    "default": true
+  },
+  {
+    "type": "range",
+    "id": "desktop_size",
+    "label": "t:labels.desktop_height_adjustment",
+    "default": 0,
+    "min": -100,
+    "max": 100,
+    "step": 10,
+    "unit": "%"
+  },
+  {
+    "type": "range",
+    "id": "mobile_size",
+    "label": "t:labels.mobile_height_adjustment",
+    "default": 0,
+    "min": -100,
+    "max": 100,
+    "step": 10,
+    "unit": "%"
+  },
+  {
+    "type": "select",
+    "id": "style",
+    "label": "t:labels.slide_navigation_style",
+    "default": "arrows",
+    "options": [
+      {
+        "value": "minimal",
+        "label": "t:labels.minimal"
+      },
+      {
+        "value": "arrows",
+        "label": "t:labels.arrows"
+      },
+      {
+        "value": "bars",
+        "label": "t:labels.bars"
+      },
+      {
+        "value": "dots",
+        "label": "t:labels.dots"
+      }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "id": "autoplay",
+    "label": "t:labels.autochange_slides",
+    "default": true
+  },
+  {
+    "type": "range",
+    "id": "autoplay_speed",
+    "label": "t:labels.change_images_every",
+    "default": 7,
+    "min": 5,
+    "max": 10,
+    "step": 1,
+    "unit": "s"
+  }
+],
+"blocks": [
+  {
+    "type": "hero",
+    "name": "t:labels.hero",
+    "settings": [
+      {
+        "type": "color",
+        "id": "text_content_background_color",
+        "label": "Text background (color)"
+      },
+      {
+        "type": "image_picker",
+        "id": "text_content_background_image",
+        "label": "Text background (image)",
+        "info": "It will override the background color if both fields are used."
+      },
+      {
+        "type": "text",
+        "id": "top_subheading",
+        "label": "t:labels.subheading"
+      },
+      {
+        "type": "color",
+        "id": "top_subheading_background",
+        "label": "Subheading background"
+      },
+      {
+        "type": "color",
+        "id": "top_subheading_color",
+        "label": "Subheading text color",
+        "default": "#000"
+      },
+      {
+        "type": "richtext",
+        "id": "title",
+        "label": "t:labels.heading",
+        "default": "<p>Overlaid Hero Slide</p>"
+      },
+      {
+        "type": "color",
+        "id": "title_color",
+        "label": "Heading color",
+        "default": "#fff"
+      },
+      {
+        "type": "range",
+        "id": "title_size",
+        "label": "t:labels.heading_text_size",
+        "default": 70,
+        "min": 40,
+        "max": 100,
+        "unit": "px"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "t:labels.text",
+        "default": "<p>And optional subtext</p>"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "t:labels.slide_link"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "t:labels.slide_link_text",
+        "default": "Optional button"
+      },
+      {
+        "type": "url",
+        "id": "link_2",
+        "label": "t:labels.slide_link_2"
+      },
+      {
+        "type": "text",
+        "id": "link_text_2",
+        "label": "t:labels.slide_link_text_339"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Button background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "color_btn_text",
+        "label": "Button text",
+        "default": "#760216"
+      },
+      {
+        "type": "select",
+        "id": "text_align",
+        "label": "t:labels.text_alignment",
+        "default": "vertical-bottom horizontal-left",
+        "options": [
+          {
+            "value": "vertical-center horizontal-left",
+            "label": "t:labels.alignments.center_left"
+          },
+          {
+            "value": "vertical-center horizontal-center",
+            "label": "t:labels.alignments.center"
+          },
+          {
+            "value": "vertical-center horizontal-right",
+            "label": "t:labels.alignments.center_right"
+          },
+          {
+            "value": "vertical-bottom horizontal-left",
+            "label": "t:labels.alignments.bottom_left"
+          },
+          {
+            "value": "vertical-bottom horizontal-center",
+            "label": "t:labels.alignments.bottom_center"
+          },
+          {
+            "value": "vertical-bottom horizontal-right",
+            "label": "t:labels.alignments.bottom_right"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "t:labels.image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "t:labels.mobile_image"
+      },
+      {
+        "type": "range",
+        "id": "overlay_opacity",
+        "label": "t:labels.text_protection",
+        "info": "t:info.darkens_your_image",
+        "default": 0,
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "%"
+      }
+    ]
+  }
+],
+"max_blocks": 5,
+"presets": [
+  {
+    "name": "t:labels.hero_optional_slides",
+    "blocks": [
+      {
+        "type": "hero",
+        "settings": {
+          "title": "<p>Overlaid Hero Slide</p>",
+          "subheading": "<p>Perfect for rich lifestyle photography.</p>",
+          "text_align": "vertical-bottom horizontal-left"
+        }
+      },
+      {
+        "type": "hero",
+        "settings": {
+          "title": "<p>Make an Impact</p>",
+          "subheading": "<p>Supports multiple text alignments and mobile-specific images.</p>",
+          "text_align": "vertical-center horizontal-center"
+        }
+      }
+    ]
+  }
+]
+}
+{% endschema %}

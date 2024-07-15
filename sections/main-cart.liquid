@@ -1,0 +1,33 @@
+
+{%- render 'section-main-cart',
+  section: section,
+  cart: cart,
+  routes: routes,
+  template: template,
+  context: 'page',
+  cart_notes_enable: settings.cart_notes_enable,
+  cart_terms_conditions_enable: settings.cart_terms_conditions_enable,
+  cart_terms_conditions_page: settings.cart_terms_conditions_page,
+  additional_checkout_buttons: additional_checkout_buttons,
+  cart_additional_buttons: settings.cart_additional_buttons,
+  quick_add_enable: settings.quick_add_enable,
+  quick_shop_enable: settings.quick_shop_enable,
+  product_grid_image_size: settings.product_grid_image_size,
+  product_grid_image_fill: settings.product_grid_image_fill,
+  product_hover_image: settings.product_hover_image,
+  enable_swatches: settings.enable_swatches,
+  vendor_enable: settings.vendor_enable,
+  product_save_amount: settings.product_save_amount,
+  product_save_type: settings.product_save_type,
+  cart_collection_handle: settings.cart_collection,
+  show_breadcrumbs: settings.show_breadcrumbs,
+  superscript_decimals: settings.superscript_decimals,
+  set_image_breathing_room: true,
+  product_grid_style: settings.product_grid_style,
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.cart_page"
+}
+{% endschema %}

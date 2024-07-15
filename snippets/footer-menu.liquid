@@ -1,0 +1,33 @@
+{% comment %}
+  /**
+   * @param {object} block - block object
+   * @param {object} linklists - linklists object
+   * @param {object} routes - routes object
+   * @param {string} blocks_heading_size - heading size for title in blocks
+   */
+{% endcomment %}
+
+{%- if blocks_heading_size -%}
+  <div class="footer__title {{ blocks_heading_size }}">
+{%- else -%}
+  <h2 class="footer__title">
+{%- endif -%}
+  {%- if block.settings.title == blank -%}
+    {{ linklists[block.settings.menu].title }}
+  {%- else -%}
+    {{ block.settings.title }}
+  {%- endif -%}
+{%- if blocks_heading_size -%}
+  </div>
+{%- else -%}
+  </h2>
+{%- endif -%}
+
+<ul class="footer__menu">
+  {%- for link in linklists[block.settings.menu].links -%}
+    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+  {%- endfor -%}
+  {%- if block.settings.enable_account_link -%}
+    <li><a href="{{ routes.account_url }}">{{ 'labels.my_account' | t }}</a></li>
+  {%- endif -%}
+</ul>

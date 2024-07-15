@@ -1,0 +1,47 @@
+{% comment %}
+  /**
+   * @param {object} product - product object
+   * @param {boolean} is_tab - whether to render as tab or not
+   * @param {string} id - tab id
+   */
+{% endcomment %}
+
+{%- liquid
+  if product.empty?
+    assign description = 'info.placeholder_product_description' | t
+  else
+    assign description = product.description
+  endif
+-%}
+
+<!-- Adjusting description to display bullet points - 12 June '24 -->
+{% if description contains '$end$' %}
+  {% assign description_arr = description | strip_html | split: '$end$' %}
+  {% capture formatted_description %}
+    <ul>
+      {% for bullet in description_arr %}
+        <li>
+        {% if bullet contains '^' %}
+          {% assign bullet_arr = bullet | split: '^' %}
+          {% for line in bullet_arr %}
+            {{ line }}<br/>
+          {% endfor %}
+        {% else %}
+          {{ bullet }}
+        {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endcapture %}
+{% else %}
+  {% assign formatted_description = description %}
+{% endif %}
+
+{%- if is_tab -%}
+  {% assign title = 'labels.description' | t %}
+  {%- render 'tab', id: id, title: title, content: formatted_description -%}
+{%- else -%}
+  <div class="rte clearfix">
+    {{ formatted_description }}
+  </div>
+{%- endif -%}

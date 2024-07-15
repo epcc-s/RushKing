@@ -1,0 +1,98 @@
+{% render 'section-scrolling-text',
+  section: section,
+  text: section.settings.text,
+  icon: section.settings.icon,
+  link: section.settings.link,
+  text_size: section.settings.text_size,
+  text_spacing: section.settings.text_spacing,
+  direction: section.settings.direction,
+  speed: section.settings.speed,
+  text_color: section.settings.text_color,
+  background: section.settings.background
+%}
+
+
+
+{% schema %}
+{
+  "name": "t:labels.scrolling_text",
+  "class": "index-section--flush",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "<p>Free shipping and returns</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon (optional)"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:labels.text_size",
+      "default": 20,
+      "min": 12,
+      "max": 150,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_spacing",
+      "label": "t:actions.add_spacing",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:labels.direction",
+      "default": "left",
+      "options": [
+        {
+          "label": "t:labels.alignments.left",
+          "value": "left"
+        },
+        {
+          "label": "t:labels.alignments.right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:labels.speed",
+      "default": 200,
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "s"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background color",
+      "default": "#880D1E"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:labels.scrolling_text"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "custom.popups"
+    ]
+  }
+}
+{% endschema %}

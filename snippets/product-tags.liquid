@@ -1,0 +1,49 @@
+{% comment %}
+  /**
+  * @param {object} product - product object
+  * @param {string} scheme - color scheme for the tag
+  * @param {string} style - style of the tag
+  */
+{% endcomment %}
+
+{% liquid
+  assign scheme = scheme | default: settings.product_tag_scheme
+  assign style = style | default: settings.product_tag_style
+  assign product_tags = ''
+
+  for tag in product.tags
+    if tag contains 'at_'
+      assign product_tags = product_tags | append: tag | append: ','
+    endif
+  endfor
+
+  assign product_tags_array = product_tags | split: ','
+%}
+
+{% comment %}
+  Loop through the product tags and split the tag into an array
+  The first part of the array is the prefix, the second is the icon, and the third is the text
+  If the prefix is 'at' then render the tag
+{% endcomment %}
+
+<div class="product-tags">
+{% for tag in product_tags_array %}
+  {% assign formatted_tag = tag | remove_first: 'at_' %}
+
+  {% assign tag_id = formatted_tag | strip %}
+  {% assign tag_text = 'tags.' | append: tag_id | replace: '-', '_' | t %}
+
+  {% unless tag_text contains 'Translation missing' %}
+    <div
+      class="product-tag product-tag--style-{{ style }} product-tag--{{ scheme }} {% if is_product_tag %}product-tag--has-link{%  endif %}"
+      data-tag-string="{{ tag }}"
+    >
+      <a href="{{ routes.all_products_collection_url }}/{{ tag | handleize }}">
+        {%  if tag_id != 'none' %}
+          {% render 'icon', name: tag_id  %} <span class="product-tag__text">{{ tag_text | capitalize }}</span>
+        {%  endif %}
+      </a>
+    </div>
+  {%  endunless %}
+{% endfor %}
+</div>

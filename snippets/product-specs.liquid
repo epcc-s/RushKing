@@ -1,0 +1,33 @@
+{% comment %}
+  /**
+   * @param {object} product - The product object
+   * @param {object} block - The block object
+   */
+{% endcomment %}
+
+{%- assign bars_to_display = block.settings.bars_to_display -%}
+{%- assign spec_label = block.settings.product_specs_label -%}
+{%- assign bar_fractions = 100 | divided_by: bars_to_display  %}
+{%- assign metafield_key = 'spec_' | append: spec_label | downcase -%}
+
+{% if product.metafields.custom[metafield_key] != blank %}
+  {%- assign spec_value = product.metafields.custom[metafield_key].value -%}
+{% else %}
+  {%- assign spec_value = block.settings.product_specs_value -%}
+{% endif %}
+
+{% if spec_value != blank %}
+  <div class="product-block product-block--specs" {{ block.shopify_attributes }}>
+    <div class="spec">
+      <div class="spec__wrapper" data-value="{{ spec_value }}" data-bars-to-fill="{{ spec_value | times: 1.0 | divided_by: bar_fractions | round }}">
+        <p>{{ spec_label }}</p>
+        <div class="spec__bars spec__bars-dividers--{{ product_specs_dividers }}">
+          {% for bar in (1..bars_to_display) %}
+            <div class="spec__bar spec__bar--{{ product_specs_style }} color-scheme-{{ product_specs_color_scheme }}" style="width: {{ bar_fractions }}%">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

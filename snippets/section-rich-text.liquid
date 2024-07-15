@@ -1,0 +1,88 @@
+{% comment %}
+  /**
+   * @param {object} section - section object
+   * @param {boolean} divider - show divider
+   * @param {string} color_scheme - color scheme
+   * @param {string} align_text - text alignment
+   * @param {boolean} narrow_column - narrow column,
+   * @param {boolean} show_wave - show wave
+   */
+{% endcomment %}
+
+<!-- Custom styles -->
+{% style %}
+  #shopify-section-{{ section.id }} .index-section {
+    background: {{ section.settings.background }};
+  }
+
+  #shopify-section-{{ section.id }} .theme-block .icon {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    {% if align_text == 'left' %}
+      justify-content: flex-start;
+    {% elsif align_text == 'center' %}
+      justify-content: center;
+    {% else %}
+      justify-content: flex-end;
+    {% endif %}
+  }
+{% endstyle %}
+
+{%- if divider -%}<div class="section--divider">{%- endif -%}
+
+<div class="index-section text-{{ align_text }}">
+
+  <div class="page-width{% if narrow_column %} page-width--narrow{% endif %}">
+    {%- for block in section.blocks -%}
+      <div class="theme-block" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            {% if block.settings.text_highlight %}
+              <h2
+                class="
+                  {{ block.settings.heading_size }}
+                  text-highlight
+                  text-highlight--{{ block.settings.text_highlight }}
+                "
+              >{{ block.settings.title }}</h2>
+            {% else %}
+              <h2 class="{{ block.settings.heading_size }}">{{ block.settings.title | escape }}</h2>
+            {% endif %}
+          {%- when 'icon' -%}
+            <div class="icon rte clearfix">
+              {% if block.settings.icon != blank %}
+                {{ block.settings.icon | img_url: '100x' | img_tag }}
+              {% endif %}
+            </div>
+          {%- when 'page' -%}
+            <div class="rte clearfix">
+              {%- if block.settings.page_text != blank -%}
+                {{ pages[block.settings.page_text].content }}
+              {%- else -%}
+                {{ 'info.section_no_content' | t }}
+              {%- endif -%}
+            </div>
+          {%- when 'text' -%}
+            <div class="rte clearfix">
+              {%- if block.settings.text != blank -%}
+                {%- if block.settings.enlarge_text %}<div class="enlarge-text">{% endif -%}
+                {{ block.settings.text }}
+                {%- if block.settings.enlarge_text %}</div>{% endif -%}
+              {%- else -%}
+                {{ 'info.section_no_content' | t }}
+              {%- endif -%}
+            </div>
+          {%- when 'button' -%}
+            <div class="rte clearfix">
+              <a href="{{ block.settings.link }}" class="btn">
+                {{ block.settings.link_text }}
+              </a>
+            </div>
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- if divider -%}</div>{%- endif -%}

@@ -1,0 +1,56 @@
+{%- render 'section-collection-header',
+  section: section,
+  collection: collection,
+  disable_sticky_header: false,
+  enable: section.settings.enable,
+  collection_image_enable: section.settings.collection_image_enable,
+  parallax: section.settings.parallax,
+  parallax_direction: section.settings.parallax_direction,
+  show_breadcrumbs: settings.show_breadcrumbs,
+  show_breadcrumbs_collection_link: settings.show_breadcrumbs_collection_link,
+  hydration: 'on:idle'
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.collection_header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "t:actions.enable_header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_image_enable",
+      "label": "t:actions.show_collection_image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "parallax",
+      "label": "t:labels.parallax_image"
+    },
+    {
+      "type": "select",
+      "id": "parallax_direction",
+      "label": "t:labels.parallax_direction",
+      "default": "top",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:labels.vertical"
+        },
+        {
+          "value": "left",
+          "label": "t:labels.horizontal"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.popups"]
+  }
+}
+{% endschema %}

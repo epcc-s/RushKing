@@ -1,0 +1,219 @@
+{%- render 'section-header',
+  section: section,
+  main_menu_link_list: section.settings.main_menu_link_list,
+  dropdown_menu_link_list: section.settings.dropdown_menu_link_list,
+  promo_menu_link_list: section.settings.promo_menu_link_list,
+  logo_alignment: 'left'
+  nav_position: 'below'
+  main_menu_alignment: section.settings.main_menu_alignment,
+  overlay_header: false
+  collection: collection,
+  sticky_index: section.settings.sticky_index,
+  sticky_collection: section.settings.sticky_collection,
+  type_navigation_size: settings.type_navigation_size,
+  type_navigation_capitalize: settings.type_navigation_capitalize,
+  color_header: settings.color_header,
+  color_header_search: settings.color_header_search
+  color_body_bg: settings.color_body_bg,
+  type_navigation_style: settings.type_navigation_style,
+  header_sticky: section.settings.header_sticky,
+  context: 'header',
+  disable_aria: false,
+  mega_products: section.settings.mega_products,
+  hover_menu: section.settings.hover_menu,
+  header_footer_menu: section.settings.header_footer_menu,
+  cart_notes_enable: settings.cart_notes_enable,
+  cart_terms_conditions_enable: settings.cart_terms_conditions_enable,
+  cart_terms_conditions_page: settings.cart_terms_conditions_page,
+  cart_type: settings.cart_type,
+  cart_additional_buttons: settings.cart_additional_buttons
+  quick_add_enable: settings.quick_add_enable,
+  quick_shop_enable: settings.quick_shop_enable,
+  product_grid_image_size: settings.product_grid_image_size,
+  product_grid_image_fill: settings.product_grid_image_fill,
+  product_hover_image: settings.product_hover_image,
+  enable_swatches: settings.enable_swatches,
+  vendor_enable: settings.vendor_enable,
+  product_save_amount: settings.product_save_amount,
+  product_save_type: settings.product_save_type,
+  superscript_decimals: settings.superscript_decimals,
+  predictive_search_enabled: settings.predictive_search_enabled,
+  cart_icon: settings.cart_icon,
+  text_direction: settings.text_direction,
+  cart_collection_handle: settings.cart_collection,
+  hydration: 'on:idle',
+  set_image_breathing_room: true,
+  product_grid_style: settings.product_grid_style,
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.header",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "main_menu_link_list",
+      "label": "t:labels.navigation",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "dropdown_menu_link_list",
+      "label": "Dropdown menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "promo_menu_link_list",
+      "label": "Promotions menu (optional)",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_menu",
+      "label": "t:actions.enable_dropdown_on_hover",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "main_menu_alignment",
+      "label": "t:labels.layout",
+      "default": "below",
+      "options": [
+        {
+          "value": "below",
+          "label": "t:labels.logo_left_menu_below"
+        },
+        {
+          "value": "left",
+          "label": "t:labels.logo_left_menu_left"
+        },
+        {
+          "value": "left-center",
+          "label": "t:labels.logo_left_menu_center"
+        },
+        {
+          "value": "center",
+          "label": "t:labels.logo_center_menu"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "mega_products",
+      "label": "t:actions.show_first_product",
+      "info": "t:info.learn_mega_menu",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky",
+      "label": "t:actions.enable_sticky_header",
+      "default": true,
+      "info": "t:labels.recommended"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_footer_menu",
+      "label": "t:actions.show_footer_content",
+      "default": true,
+      "info": "t:labels.recommended"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_index",
+      "label": "t:actions.overlay_header_over_home",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_collection",
+      "label": "t:actions.overlay_header_over_collection",
+      "info": "t:info.if_collection_image_enabled",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Additional links"
+    },
+    {
+      "type": "text",
+      "id": "link_label_1",
+      "label": "Link 1 label"
+    },
+    {
+      "type": "url",
+      "id": "link_url_1",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_label_2",
+      "label": "Link 2 label"
+    },
+    {
+      "type": "url",
+      "id": "link_url_2",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_label_3",
+      "label": "Link 3 label"
+    },
+    {
+      "type": "url",
+      "id": "link_url_3",
+      "label": "Link 3 URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "t:labels.logo",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "t:labels.logo"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo-inverted",
+          "label": "t:labels.white_logo",
+          "info": "t:info.used_when_on_top_of_image"
+        },
+        {
+          "type": "range",
+          "id": "desktop_logo_width",
+          "label": "t:labels.desktop_logo_width",
+          "default": 200,
+          "min": 100,
+          "max": 400,
+          "step": 10,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "mobile_logo_width",
+          "label": "t:labels.mobile_logo_width",
+          "default": 140,
+          "min": 60,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "info": "t:info.set_as_max_width"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "settings": {}
+  },
+  "disabled_on": {
+    "groups": ["footer", "custom.popups"]
+  }
+}
+{% endschema %}

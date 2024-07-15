@@ -1,0 +1,110 @@
+{% comment %}
+  /**
+   * @param {object} section - section
+   * @param {object} product - product
+   * @param {object} forloop - forloop object
+   * @param {string} form_id - form id
+   * @param {string} size_chart_title - title for the size chart tool tip
+   * @param {string} swatch_file_extension - file extension for swatch images
+   * @param {object} option - variant option object
+   * @param {boolean} variant_labels - whether or not to show variant labels
+   * @param {boolean} connect_to_sizechart - whether or not to connect to size chart
+   * @param {number} sizechart_index - index of size chart block
+   * @param {boolean} is_color - whether or not the option is a color
+   * @param {number} color_option_index - index of color option
+   */
+{% endcomment %}
+
+{%- capture size_chart_title -%}
+  {{ 'labels.size_chart' | t }} {% render 'icon', name: 'size-chart' %}
+{%- endcapture -%}
+
+{%- liquid
+  assign is_size = false
+  assign size_trigger = 'labels.size_chart' | t | downcase
+  assign downcased_option = option.name | downcase
+
+  if size_trigger contains downcased_option
+    assign is_size = true
+  endif
+-%}
+
+<div class="variant-wrapper js" data-type="button">
+  <label tabindex="0" class="variant__label{% if option.name == 'Default' or option.name == 'Title' %} visually-hidden{% endif %}{% unless variant_labels %} visually-hidden{% endunless %}"
+    for="ProductSelect-{{ section.id }}-{{ product.id }}-option-{{ index0 }}">
+    {{ option.name }}
+    {%- if connect_to_sizechart and is_size -%}
+      <span class="variant__label-info">
+        &mdash;
+        {%- render
+          'tool-tip-trigger',
+          title: size_chart_title,
+          content: section.blocks[sizechart_index].settings.size_chart.content,
+          context: 'size-chart'
+        -%}
+      </span>
+    {%- endif -%}
+    {%- if is_color -%}
+      <span class="variant__label-info">
+        &mdash;
+        <span
+          data-variant-color-label
+          data-index="{{ forloop.index0 }}"
+          data-option-index="{{ color_option_index }}">
+          {{ option.selected_value }}
+        </span>
+      </span>
+    {%- endif -%}
+  </label>
+  {%- assign option_index = forloop.index -%}
+  <fieldset class="variant-input-wrap"
+    name="{{ option.name }}"
+    data-index="option{{ option_index }}"
+    data-handle="{{ option.name | handleize }}"
+    id="ProductSelect-{{ section.id }}-{{ product.id }}-option-{{ forloop.index0 }}">
+    <legend class="hide">{{ option.name }}</legend>
+    {%- for value in option.values -%}
+      {%- liquid
+        assign product_available = true
+        if product.options.size == 1
+          assign product_available = product.variants[forloop.index0].available
+        endif
+      -%}
+      <div
+        class="variant-input"
+        data-index="option{{ option_index }}"
+        data-value="{{ value | escape }}">
+        <input type="radio" form="{{ form_id }}"
+          {% if option.selected_value == value %} checked="checked"{% endif %}
+          value="{{ value | escape }}"
+          data-index="option{{ option_index }}"
+          name="{{ option.name }}"
+          data-variant-input
+          class="visually-hidden {% unless product_available %} disabled{% endunless %}{% if is_color %} variant__input--color-swatch{% endif %}"
+          {% if is_color %} data-color-name="{{ value | escape }}"{% endif %}
+          {% if is_color %} data-color-index="{{ color_option_index }}"{% endif %}
+          id="ProductSelect-{{ section.id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}">
+        {%- if is_color -%}
+          {%- liquid
+            assign color_file_name = value | handle | append: '.' | append: swatch_file_extension
+            assign color_image = color_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+            assign color_swatch_fallback = value | split: ' ' | last | handle
+          -%}
+          <label
+            tabindex="0"
+            for="ProductSelect-{{ section.id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+            class="variant__button-label color-swatch color-swatch--{{ value | handle }}{% unless product_available %} disabled{% endunless %}"
+            style="background-color: {{ color_swatch_fallback }};{% if images[color_file_name] != blank %}  background-image: url({{ color_image }});{% endif %}"
+          >
+            {{ value | escape }}
+          </label>
+        {%- else -%}
+          <label
+            tabindex="0"
+            for="ProductSelect-{{ section.id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+            class="variant__button-label{% unless product_available %} disabled{% endunless %}">{{ value | escape }}</label>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </fieldset>
+</div>

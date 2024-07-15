@@ -1,0 +1,217 @@
+{% comment %}
+  /**
+  * @param {object} section - section object
+  * @param {boolean} top_padding - top padding setting
+  * @param {boolean} bottom_padding - bottom padding setting
+  * @param {boolean} full_width - full width setting
+  * @param {string} color_scheme - color scheme setting
+  * @param {string} media_width - media width setting
+  * @param {string} layout - layout setting
+  * @param {string} content_alignment - content alignment setting
+  * @param {string} media_crop - media crop setting
+  * @param {string} content_position - content position setting
+  * @param {string} subheading - subheading setting
+  * @param {string} heading - heading setting
+  * @param {string} heading_size - heading size setting
+  * @param {string} text_highlight - text highlight setting
+  * @param {string} text - text setting
+  * @param {string} button_text - button text setting
+  * @param {string} button_link - button link setting
+  */
+{% endcomment %}
+
+{%- liquid
+  assign lazyload_images = true
+  if section.index == 1
+    assign lazyload_images = false
+  endif
+-%}
+
+{%- style -%}
+  {%- if top_padding == false -%}
+    #shopify-section-{{ section.id }} .index-section { padding-top: 0 !important; }
+  {%- endif -%}
+  {%- if bottom_padding == false -%}
+    #shopify-section-{{ section.id }} .index-section { padding-bottom: 0 !important; }
+  {%- endif -%}
+{%- endstyle -%}
+
+<div class="{% unless full_width %}index-section{% endunless %} color-scheme-{{ color_scheme }}">
+  {%- if color_scheme != 'none' -%}
+    {%- render 'color-scheme-texture', color_scheme: color_scheme -%}
+  {%- endif -%}
+  <section
+    class="
+      media-with-text media-with-text-media-width--{{ media_width }}
+      media-with-text-layout--{{ layout }}
+      media-with-text-full-width--{{ full_width }}
+      media-with-text-content-align--{{ content_alignment }}
+      {% unless full_width %}page-width{% endunless %}
+      {% if media_crop == '16-9' or
+        media_crop == '4-3' or
+        media_crop == 'portrait' or
+        media_crop == 'landscape' or
+        media_crop == 'square'
+      %}
+        media-with-text-media-crop--regular
+      {% elsif media_crop == 'none' %}
+        media-with-text-media-crop--none
+      {% else %}
+        media-with-text-media-crop--custom-shape
+      {% endif %}
+    "
+  >
+    <div
+      class="
+        media-with-text__content
+        media-with-text-content-position--{{ content_position }}
+      "
+    >
+      {%- if subheading != blank -%}
+        <p class="accent-subtitle">{{ subheading }}</p>
+      {%- endif -%}
+      {%- if heading != blank -%}
+        <h2
+          class="
+            {{ heading_size }}
+            text-highlight
+            text-highlight--{{ text_highlight }}
+          "
+        >{{ heading }}</h2>
+      {%- endif -%}
+      {%- if text != blank -%}
+        <div
+          class="rte media-with-text__richtext clearfix"
+        >{{ text }}</div>
+      {%- endif -%}
+      {%- if button_text != blank -%}
+        <div class="media-with-text__content-button">
+          <a href="{{ button_link }}" class="btn">
+            {{ button_text }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="media-with-text__media">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'video' -%}
+          <div
+            class="
+              media-with-text__video
+              {% if block.settings.video == blank %}media-with-text__video--no-video{% endif %}
+              {% if block.settings.video != blank %}
+                media-with-text-video-crop--{{ media_crop }}
+              {% endif %}
+            "
+            {{ block.shopify_attributes }}
+          >
+          {%- if block.settings.video != blank -%}
+            {%- if block.settings.alt_image != blank -%}
+              {%- capture image_classes -%}media-with-text__alt-image{%- endcapture -%}
+              <div
+                class="media-with-text__alt-image-wrapper
+                  {% if media_crop != 'none' and
+                    media_crop != '16-9' and
+                    media_crop != '4-3'
+                  %}
+                    svg-mask svg-mask--{{ media_crop }}
+                  {% endif %}
+                "
+              >
+                {%- render 'image-element',
+                  img: block.settings.alt_image,
+                  classes: image_classes,
+                -%}
+              </div>
+            {%- endif -%}
+            <div class="media-with-text__video-wrapper media-with-text__video-wrapper--hidden
+              {% if media_crop != 'none' and
+                media_crop != '16-9' and
+                media_crop != '4-3'
+              %}
+                svg-mask svg-mask--{{ media_crop }}
+              {% endif %}
+            ">
+              <media-text>
+                {{ block.settings.video
+                  | video_tag:
+                    image_size: "1100x",
+                    autoplay: block.settings.autoplay,
+                    loop: block.settings.loop,
+                    controls: false,
+                    muted: block.settings.mute_video
+                }}
+                <button type="button"
+                  class="
+                    media-with-text__play-button
+                    {% if block.settings.hide_controls %}media-with-text__play-button--hidden{% endif %}
+                  "
+                >
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="24.52px" height="28.3px" viewBox="18.24 17.35 24.52 28.3" enable-background="new 18.24 17.35 24.52 28.3"
+                    xml:space="preserve"
+                    class="icon icon--play"
+                  >
+                  <path fill="#323232" d="M22.1,19.151v25.5l20.4-13.489L22.1,19.151z"/>
+                  </svg>
+                  <span class="icon__fallback-text visually-hidden">Play</span>
+                </button>
+              </media-text>
+            </div>
+          {%- else -%}
+            <div class="media-with-text__placeholder-image">
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if block.type == 'image' -%}
+          <div
+            class="
+              media-with-text__image
+              {% if block.settings.image == blank %}media-with-text__image--no-image{% endif %}
+            "
+            {{ block.shopify_attributes }}
+          >
+          {%- if block.settings.image != blank -%}
+            <div
+              class="{% if media_crop != 'none' %}svg-mask svg-mask--{{ media_crop }}{% endif %}
+              "
+              {%- if media_crop != 'none' -%}
+                style="--svg-mask-ratio: {{ 100 | divided_by: block.settings.image.aspect_ratio }}%;"
+              {%- endif -%}
+            >
+              {%- liquid
+                assign sizes = media_width | append: 'vw'
+
+                assign imageWidth = media_width | times: 1
+                if imageWidth >= 50
+                  assign loading = lazyload_images
+                else
+                  assign loading = true
+                endif
+              -%}
+              {%- render 'image-element'
+                img: block.settings.image,
+                sizes: sizes,
+                loading: loading,
+              -%}
+            </div>
+          {%- else -%}
+            <div class="image-placeholder">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if block.type == 'app' -%}
+          {%- render block -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  import 'components/section-media-text';
+</script>

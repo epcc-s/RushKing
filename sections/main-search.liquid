@@ -1,0 +1,85 @@
+{%- render 'section-main-search',
+    section: section,
+    search: search,
+    cart: cart,
+    context: 'search-page',
+    enable_sidebar: section.settings.enable_sidebar,
+    enable_color_swatches: section.settings.enable_color_swatches,
+    tags_combine: false,
+    enable_sort: section.settings.enable_sort,
+    collapse_filters: section.settings.collapse_filters,
+    paginate_by: 40,
+    grid_style: section.settings.grid_style,
+    quick_shop_enable: settings.quick_shop_enable,
+    quick_add_enable: settings.quick_add_enable,
+    product_grid_image_size: settings.product_grid_image_size,
+    product_grid_image_fill: settings.product_grid_image_fill,
+    product_hover_image: settings.product_hover_image,
+    enable_swatches: settings.enable_swatches,
+    vendor_enable: settings.vendor_enable,
+    product_save_amount: settings.product_save_amount,
+    product_save_type: settings.product_save_type,
+    show_breadcrumbs: settings.show_breadcrumbs,
+    color_header_search: settings.color_header_search,
+    predictive_search_enabled: settings.predictive_search_enabled,
+    hydration: 'on:idle',
+    set_image_breathing_room: true,
+    product_grid_style: settings.product_grid_style,
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.search_page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:labels.filtering_and_sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sidebar",
+      "label": "t:actions.enable_filter",
+      "default": true,
+      "info": "t:info.allow_your_customers_to_filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_filters",
+      "label": "t:actions.collapse_filters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_swatches",
+      "label": "t:actions.enable_color_swatches",
+      "info": "t:actions.view_setup_instructions"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sort",
+      "label": "t:actions.show_sort_options",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "grid_style",
+      "label": "t:labels.default_product_layout",
+      "default": "medium",
+      "options": [
+        {
+          "value": "large",
+          "label": "t:labels.sizes.large_grid"
+        },
+        {
+          "value": "medium",
+          "label": "t:labels.sizes.small_grid"
+        },
+        {
+          "value": "list",
+          "label": "t:labels.list"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

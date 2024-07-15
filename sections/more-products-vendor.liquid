@@ -1,0 +1,52 @@
+{%- render 'section-more-products-vendor',
+    section: section,
+    product: product,
+    products_per_row: section.settings.products_per_row,
+    max_products: section.settings.max_products,
+    quick_add_enable: settings.quick_add_enable,
+    quick_shop_enable: settings.quick_shop_enable,
+    product_grid_image_size: settings.product_grid_image_size,
+    product_grid_image_fill: settings.product_grid_image_fill,
+    product_hover_image: settings.product_hover_image,
+    enable_swatches: settings.enable_swatches,
+    vendor_enable: settings.vendor_enable,
+    product_save_amount: settings.product_save_amount,
+    product_save_type: settings.product_save_type,
+    superscript_decimals: settings.superscript_decimals,
+    hydration: 'on:visible',
+    set_image_breathing_room: true,
+    product_grid_style: settings.product_grid_style,
+-%}
+
+{% schema %}
+{
+  "name": "t:labels.more_from_vendor",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:labels.more_from_vendor"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "t:labels.desktop_products_per",
+      "default": 3,
+      "min": 2,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "t:labels.maximum_products_to",
+      "default": 5,
+      "min": 2,
+      "max": 10,
+      "step": 1
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.popups"]
+  }
+}
+{% endschema %}

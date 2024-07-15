@@ -1,0 +1,96 @@
+{% comment %}
+  /**
+   * @param {object} section - section object
+   * @param {string} color_scheme - color scheme
+   * @param {boolean} narrow_column - narrow column
+   * @param {string} title - title
+   * @param {string} text - text
+   * @param {string} heading_position - heading position
+   * @param {string} heading_size - heading size
+   * @param {object} customer - customer object
+   * @param {boolean} show_phone - show phone
+   */
+{% endcomment %}
+
+<div class="index-section newsletter-{{ section.id }} color-scheme-{{ color_scheme }}">
+  {%- if color_scheme != 'none' -%}
+    {%- render 'color-scheme-texture', color_scheme: color_scheme -%}
+  {%- endif -%}
+  <div class="page-width{% if narrow_column %} page-width--narrow{% endif %}">
+    {%- if title != blank or text != blank -%}
+      <div class="section-header text-{{ heading_position }}">
+        {%- if title != blank -%}
+          <h2 class="section-header__title {{ heading_size }}">
+            {{ title }}
+          </h2>
+        {%- endif -%}
+        {%- if text != blank -%}
+          <div class="rte section-header__rte clearfix">{{ text }}</div>
+        {%- endif -%}
+      </div>
+    {% endif %}
+
+    <div class="form-vertical">
+      {%- assign form_id = 'contact-' | append: section.id -%}
+      {%- form 'contact', id: form_id -%}
+
+        {%- if form.posted_successfully? -%}
+          <p class="note note--success">
+            {{ 'info.contact_confirmation' | t }}
+          </p>
+        {%- endif -%}
+
+        {{ form.errors | default_errors }}
+
+        <!-- Adjusting input fields - 14 June '24 -->
+        <div class="grid grid--small clearfix">
+          <div class="grid__item medium-up--one-half">
+            <label for="ContactFormName-{{ section.id }}">{{ 'labels.name' | t }} <span>*</span></label>
+            <input type="text" id="ContactFormName-{{ section.id }}" class="input-full" name="contact[name]" autocapitalize="words" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+          </div>
+
+          <div class="grid__item medium-up--one-half">
+            <label for="ContactFormEmail-{{ section.id }}">{{ 'labels.email' | t }} <span>*</span></label>
+              <input type="email" id="ContactFormEmail-{{ section.id }}" class="input-full" name="contact[email]" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required>
+          </div>
+        </div>
+
+        {%- if show_phone -%}
+          <label for="ContactFormPhone-{{ section.id }}">{{ 'labels.phone_number' | t }}</label>
+          <input type="tel" id="ContactFormPhone-{{ section.id }}" class="input-full" name="contact[phone]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+        {%- endif -%}
+
+        <label for="ContactFormMessage-{{ section.id }}">{{ 'labels.message' | t }} <span>*</span></label>
+        <textarea rows="5" id="ContactFormMessage-{{ section.id }}" class="input-full" name="contact[body]" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+        <div class="terms-and-conditions">
+          <input type="checkbox" id="terms" name="contact[terms_and_conditions]" value="Accepts"><label for="terms">I have read and agreed to the <a href="/">Terms of Use</a></label>
+        </div>
+
+        <label for="contact-form-submit-{{ section.id }}" class="visually-hidden">{{ 'actions.send' | t }}</label>
+        <button type="submit" id="contact-form-submit-{{ section.id }}" class="btn" disabled>
+          {{ 'actions.send' | t }}
+        </button>
+
+        {% comment %}
+          Remove the following three lines of code to remove the note
+          about being protected by Google's reCAPTCHA service.
+          By removing it, the small reCAPTCHA widget will appear in the
+          bottom right corner of the page.
+        {% endcomment %}
+        {{ 'shopify.online_store.spam_detection.disclaimer_html' | t }}
+
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  const checkbox = document.getElementById('terms');
+  const btn = document.querySelector('.contact-form #contact-form-submit-{{ section.id }}');
+  checkbox.addEventListener('change', function(e) {
+    btn.disabled = !this.checked;
+    console.log(btn);
+  });
+  checkbox.dispatchEvent(new Event('change'));
+</script>
