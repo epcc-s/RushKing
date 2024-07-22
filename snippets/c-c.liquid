@@ -1,0 +1,152 @@
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const styles = `
+    .blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgb(0 0 0 / 50%);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: none;
+    }
+
+    .blur-overlay iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @media (min-width: 768px) {
+      .blur-overlay iframe {
+        width: 80%;
+        max-width: 1000px;
+        height: 80%;
+      }
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid #fff;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .button-disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  `;
+
+  const styleSheet = document.createElement('style');
+  styleSheet.type = 'text/css';
+  styleSheet.innerText = styles;
+  document.head.appendChild(styleSheet);
+
+  const blurOverlay = document.createElement('div');
+  blurOverlay.classList.add('blur-overlay');
+  blurOverlay.id = 'blurOverlay';
+  document.body.appendChild(blurOverlay);
+
+  const customCheckoutButton = document.getElementById('customCheckoutButton');
+  const loadingSpinner = document.createElement('span');
+  loadingSpinner.id = 'loadingSpinner';
+  loadingSpinner.classList.add('loading-spinner');
+  loadingSpinner.style.display = 'none';
+  customCheckoutButton.appendChild(loadingSpinner);
+
+  customCheckoutButton.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    loadingSpinner.style.display = 'inline-block';
+    customCheckoutButton.classList.add('button-disabled');
+
+    const endpointUrl = 'https://fidelity--development.gadget.app/{{ shop.id }}/checkout/create';
+
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        const lineItems = cart.items.map(item => ({
+          variant_id: item.variant_id,
+          quantity: item.quantity,
+          properties: item.properties || {}
+        }));
+
+        const payload = {
+          lineItems: lineItems,
+          note: cart.note || ''
+        };
+
+        const email = '{{ customer.email }}';
+        if (email) {
+          payload.email = email;
+        }
+
+        return fetch(endpointUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.checkoutToken) {
+          const iframeUrl = `https://dev-jay.dhtzl0nbfmdta.amplifyapp.com/checkout/${data.checkoutToken}`;
+
+          const iframe = document.createElement('iframe');
+          iframe.src = iframeUrl;
+          iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+          iframe.style.display = 'none';
+
+          iframe.onload = function() {
+            loadingSpinner.style.display = 'none';
+            customCheckoutButton.classList.remove('button-disabled');
+            blurOverlay.style.display = 'block';
+            iframe.style.display = 'block';
+          };
+
+          blurOverlay.appendChild(iframe);
+        } else {
+          alert('Failed to retrieve token');
+          loadingSpinner.style.display = 'none';
+          customCheckoutButton.classList.remove('button-disabled');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request');
+        loadingSpinner.style.display = 'none';
+        customCheckoutButton.classList.remove('button-disabled');
+      });
+  });
+
+  window.addEventListener('message', function(event) {
+    if (event.data === 'closeIframe') {
+      const blurOverlay = document.getElementById('blurOverlay');
+      if (blurOverlay) {
+        blurOverlay.style.display = 'none';
+        while (blurOverlay.firstChild) {
+          blurOverlay.removeChild(blurOverlay.firstChild);
+        }
+      }
+    }
+  });
+});
+</script>
