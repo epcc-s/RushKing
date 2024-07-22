@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadingSpinner.style.display = 'inline-block';
     customCheckoutButton.classList.add('button-disabled');
 
-    const endpointUrl = 'https://fidelity--development.gadget.app/{{ shop.id }}/checkout/create';
+    const endpointUrl = 'https://fidelity.gadget.app/{{ shop.id }}/checkout/create';
 
     fetch('/cart.js')
       .then(response => response.json())
