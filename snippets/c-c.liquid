@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadingSpinner.style.display = 'inline-block';
     customCheckoutButton.classList.add('button-disabled');
 
-    const endpointUrl = 'https://fidelity.gadget.app/{{ shop.id }}/checkout/create';
+    const endpointUrl = 'https://fidelity-old--development.gadget.app/{{ shop.id }}/checkout/create';
+    console.log("endpointUrl", endpointUrl);
 
     fetch('/cart.js')
       .then(response => response.json())
@@ -108,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.checkoutToken) {
-          const iframeUrl = `https://dev-jay.dhtzl0nbfmdta.amplifyapp.com/checkout/${data.checkoutToken}`;
+          const iframeUrl = `https://dev-jay.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
+          console.log("iframeUrl", iframeUrl);
 
           const iframe = document.createElement('iframe');
           iframe.src = iframeUrl;
