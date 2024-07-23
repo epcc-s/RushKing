@@ -149,7 +149,7 @@
           {% endif %}
 
           <div class="cart__item-row cart__checkout-wrapper">
-
+            {% comment %}
             <button type="submit" name="checkout" data-terms-required="{{ cart_terms_conditions_enable }}" class="btn cart__checkout">
               {{ 'actions.checkout' | t }}
             </button>
@@ -157,12 +157,12 @@
             {% if additional_checkout_buttons and cart_additional_buttons %}
               <div class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</div>
             {% endif %}
-                     {% comment %}
+            {% endcomment %}
                         <button type="button" id="customCheckoutButton" class="btn cart__checkout">
               {{ 'actions.checkout' | t }}
               <span id="loadingSpinner" class="loading-spinner" style="display: none;"></span>
             </button>
-   {% endcomment %}
+
             <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary cart__continue">
               {{ 'actions.continue_shopping' | t }}
             </a>
@@ -187,4 +187,4 @@
   import 'components/section-main-cart';
 </script>
 
-<!-- {% render 'c-c' %} -->
+{% render 'c-c' %}
