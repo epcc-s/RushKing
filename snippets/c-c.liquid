@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.checkoutToken) {
-          const iframeUrl = `https://dev-jay.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
+          const iframeUrl = `https://dev.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
           console.log("iframeUrl", iframeUrl);
 
           const iframe = document.createElement('iframe');
