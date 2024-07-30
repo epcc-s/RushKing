@@ -164,7 +164,8 @@
     }
 
     window.addEventListener('message', function (event) {
-      console.log("event.data", event.data );
+      console.log("event.data", event.data);
+      console.log("event.data.status", event.data.status);
       if (event.data === 'closeIframe') {
         const blurOverlay = document.getElementById('blurOverlay');
         if (blurOverlay) {
