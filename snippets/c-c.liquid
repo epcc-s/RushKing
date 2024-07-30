@@ -76,12 +76,16 @@
       loadingSpinner.style.display = 'inline-block';
       customCheckoutButton.classList.add('button-disabled');
 
-      const endpointUrl = 'https://f.epcc.cc/{{ shop.id }}/checkout/create';
-      console.log('endpointUrl', endpointUrl);
-
       fetch('/cart.js')
         .then((response) => response.json())
         .then((cart) => {
+          if (cart.items.length === 0) {
+            alert('Your cart is empty.');
+            loadingSpinner.style.display = 'none';
+            customCheckoutButton.classList.remove('button-disabled');
+            return;
+          }
+
           const lineItems = cart.items.map((item) => ({
             variant_id: item.variant_id,
             quantity: item.quantity,
@@ -98,6 +102,7 @@
             payload.email = email;
           }
 
+          const endpointUrl = 'https://f.epcc.cc/{{ shop.id }}/checkout/create';
           return fetch(endpointUrl, {
             method: 'POST',
             headers: {
@@ -106,8 +111,13 @@
             body: JSON.stringify(payload),
           });
         })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response) return;
+          return response.json();
+        })
         .then((data) => {
+          if (!data) return;
+
           if (data.checkoutToken) {
             const iframeUrl = `https://dev.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
             console.log('iframeUrl', iframeUrl);
