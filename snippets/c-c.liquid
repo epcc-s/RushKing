@@ -1,6 +1,6 @@
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const styles = `
+  document.addEventListener('DOMContentLoaded', function () {
+    const styles = `
     .blur-overlay {
       position: fixed;
       top: 0;
@@ -53,102 +53,122 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   `;
 
-  const styleSheet = document.createElement('style');
-  styleSheet.type = 'text/css';
-  styleSheet.innerText = styles;
-  document.head.appendChild(styleSheet);
+    const styleSheet = document.createElement('style');
+    styleSheet.type = 'text/css';
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
 
-  const blurOverlay = document.createElement('div');
-  blurOverlay.classList.add('blur-overlay');
-  blurOverlay.id = 'blurOverlay';
-  document.body.appendChild(blurOverlay);
+    const blurOverlay = document.createElement('div');
+    blurOverlay.classList.add('blur-overlay');
+    blurOverlay.id = 'blurOverlay';
+    document.body.appendChild(blurOverlay);
 
-  const customCheckoutButton = document.getElementById('customCheckoutButton');
-  const loadingSpinner = document.createElement('span');
-  loadingSpinner.id = 'loadingSpinner';
-  loadingSpinner.classList.add('loading-spinner');
-  loadingSpinner.style.display = 'none';
-  customCheckoutButton.appendChild(loadingSpinner);
+    const customCheckoutButton = document.getElementById('customCheckoutButton');
+    const loadingSpinner = document.createElement('span');
+    loadingSpinner.id = 'loadingSpinner';
+    loadingSpinner.classList.add('loading-spinner');
+    loadingSpinner.style.display = 'none';
+    customCheckoutButton.appendChild(loadingSpinner);
 
-  customCheckoutButton.addEventListener('click', function(event) {
-    event.preventDefault();
+    customCheckoutButton.addEventListener('click', function (event) {
+      event.preventDefault();
 
-    loadingSpinner.style.display = 'inline-block';
-    customCheckoutButton.classList.add('button-disabled');
+      loadingSpinner.style.display = 'inline-block';
+      customCheckoutButton.classList.add('button-disabled');
 
-    const endpointUrl = 'https://f.epcc.cc/{{ shop.id }}/checkout/create';
-    console.log("endpointUrl", endpointUrl);
+      const endpointUrl = 'https://f.epcc.cc/{{ shop.id }}/checkout/create';
+      console.log('endpointUrl', endpointUrl);
 
-    fetch('/cart.js')
-      .then(response => response.json())
-      .then(cart => {
-        const lineItems = cart.items.map(item => ({
-          variant_id: item.variant_id,
-          quantity: item.quantity,
-          properties: item.properties || {}
-        }));
+      fetch('/cart.js')
+        .then((response) => response.json())
+        .then((cart) => {
+          const lineItems = cart.items.map((item) => ({
+            variant_id: item.variant_id,
+            quantity: item.quantity,
+            properties: item.properties || {},
+          }));
 
-        const payload = {
-          lineItems: lineItems,
-          note: cart.note || ''
-        };
-
-        const email = '{{ customer.email }}';
-        if (email) {
-          payload.email = email;
-        }
-
-        return fetch(endpointUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.checkoutToken) {
-          const iframeUrl = `https://dev.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
-          console.log("iframeUrl", iframeUrl);
-
-          const iframe = document.createElement('iframe');
-          iframe.src = iframeUrl;
-          iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-          iframe.style.display = 'none';
-
-          iframe.onload = function() {
-            loadingSpinner.style.display = 'none';
-            customCheckoutButton.classList.remove('button-disabled');
-            blurOverlay.style.display = 'block';
-            iframe.style.display = 'block';
+          const payload = {
+            lineItems: lineItems,
+            note: cart.note || '',
           };
 
-          blurOverlay.appendChild(iframe);
-        } else {
-          alert('Failed to retrieve token');
+          const email = '{{ customer.email }}';
+          if (email) {
+            payload.email = email;
+          }
+
+          return fetch(endpointUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.checkoutToken) {
+            const iframeUrl = `https://dev.dhtzl0nbfmdta.amplifyapp.com/{{ shop.id }}/checkout/${data.checkoutToken}`;
+            console.log('iframeUrl', iframeUrl);
+
+            const iframe = document.createElement('iframe');
+            iframe.src = iframeUrl;
+            iframe.setAttribute('sandbox', 'allow-top-navigation allow-scripts allow-same-origin');
+            iframe.style.display = 'none';
+
+            iframe.onload = function () {
+              loadingSpinner.style.display = 'none';
+              customCheckoutButton.classList.remove('button-disabled');
+              blurOverlay.style.display = 'block';
+              iframe.style.display = 'block';
+            };
+
+            blurOverlay.appendChild(iframe);
+          } else {
+            alert('Failed to retrieve token');
+            loadingSpinner.style.display = 'none';
+            customCheckoutButton.classList.remove('button-disabled');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('An error occurred while processing your request');
           loadingSpinner.style.display = 'none';
           customCheckoutButton.classList.remove('button-disabled');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while processing your request');
-        loadingSpinner.style.display = 'none';
-        customCheckoutButton.classList.remove('button-disabled');
-      });
-  });
+        });
+    });
 
-  window.addEventListener('message', function(event) {
-    if (event.data === 'closeIframe') {
-      const blurOverlay = document.getElementById('blurOverlay');
-      if (blurOverlay) {
-        blurOverlay.style.display = 'none';
-        while (blurOverlay.firstChild) {
-          blurOverlay.removeChild(blurOverlay.firstChild);
+    function clearCart() {
+      return fetch('/cart/clear.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+        if (!response.ok) {
+          console.error('Failed to clear cart');
         }
-      }
+      }).catch((error) => {
+        console.error('Error clearing cart:', error);
+      });
     }
+
+    window.addEventListener('message', function (event) {
+      if (event.data === 'closeIframe') {
+        const blurOverlay = document.getElementById('blurOverlay');
+        if (blurOverlay) {
+          blurOverlay.style.display = 'none';
+          while (blurOverlay.firstChild) {
+            blurOverlay.removeChild(blurOverlay.firstChild);
+          }
+        }
+      } else if (event.data.type === 'navigate' && event.data.url) {
+        // Clear the Shopify cart and then navigate
+        clearCart().finally(() => {
+          window.location.href = event.data.url;
+        });
+      }
+    });
   });
-});
 </script>
