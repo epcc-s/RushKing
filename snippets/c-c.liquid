@@ -80,7 +80,7 @@
         .then((response) => response.json())
         .then((cart) => {
           if (cart.items.length === 0) {
-            alert('Your cart is empty.');
+            console.error('Your cart is empty.');
             loadingSpinner.style.display = 'none';
             customCheckoutButton.classList.remove('button-disabled');
             return;
@@ -136,14 +136,13 @@
 
             blurOverlay.appendChild(iframe);
           } else {
-            alert('Failed to retrieve token');
+            console.error('Failed to retrieve token');
             loadingSpinner.style.display = 'none';
             customCheckoutButton.classList.remove('button-disabled');
           }
         })
         .catch((error) => {
           console.error('Error:', error);
-          alert('An error occurred while processing your request');
           loadingSpinner.style.display = 'none';
           customCheckoutButton.classList.remove('button-disabled');
         });
