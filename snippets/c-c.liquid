@@ -97,6 +97,11 @@
             note: cart.note || '',
           };
 
+          const customerId = '{{ customer.id }}';
+          if (customerId) {
+            payload.customerId = customerId;
+          }
+          
           const email = '{{ customer.email }}';
           if (email) {
             payload.email = email;
