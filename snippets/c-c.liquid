@@ -173,7 +173,7 @@
             blurOverlay.removeChild(blurOverlay.firstChild);
           }
         }
-      } else if (event.data.type === 'complete' && event.data.url) {
+      } else if (event.data.type === 'order_created' && event.data.url) {
         // Clear the Shopify cart and then navigate
         clearCart().finally(() => {
           window.location.href = event.data.url;
